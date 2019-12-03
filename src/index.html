@@ -10,8 +10,10 @@ let x = 0;
 let y = 0;
 let operation = '';
 
-let addURL = "http://add.webcalc.qpc.hal.davecutting.uk";
-let minusURL = "http://subtract.webcalc.qpc.hal.davecutting.uk";
+let addURL = "http://34.89.6.231";
+let minusURL = "http://35.230.139.0";
+let divideURL = "http://35.189.76.247";
+let multiplyURL ="http://35.242.140.15:80";
 
 function Display()
 {
@@ -66,6 +68,32 @@ function Minus()
     Display();
 }
 
+function Divide()
+{
+    // if we have an outstanding operation resolve it
+    if (operation != '')
+        Equals();
+
+    x = value;
+    value = 0;
+    operation = '/';
+
+    Display();
+}
+
+function Multiply()
+{
+    // if we have an outstanding operation resolve it
+    if (operation != '')
+        Equals();
+
+    x = value;
+    value = 0;
+    operation = '*';
+
+    Display();
+}
+
 function Equals()
 {
     if (operation == '')
@@ -112,8 +140,47 @@ function Equals()
 
         return;
     }
-}
+	
+	else if (operation == '/')
+    {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var j = JSON.parse(this.response);
+                x=0;
+                y=0;
+                operation='';
+                value = j.answer;
+                Display();
+            }
+        };
 
+        xhttp.open("GET",divideURL+"?x="+x+"&y="+y);
+        xhttp.send();
+
+        return;
+    }
+	else if (operation == '*')
+    {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var j = JSON.parse(this.response);
+                x=0;
+                y=0;
+                operation='';
+                value = j.answer;
+                Display();
+            }
+        };
+
+        xhttp.open("GET",multiplyURL+"?x="+x+"&y="+y);
+        xhttp.send();
+
+        return;
+    }
+
+}
 </script>
 
 <style type="text/css">
